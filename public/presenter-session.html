@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>">
     <title>HANA 花园 - 演讲者控制台 🌸</title>
-    <link rel="stylesheet" href="hana-theme.css">
+    <link rel="stylesheet" href="/hana-theme.css">
     <style>
         * {
             margin: 0;
@@ -274,19 +274,17 @@
                     const audienceUrl = `${window.location.origin}/audience/${sessionId}`;
                     document.getElementById('audienceUrl').textContent = audienceUrl;
                     
-                    // 直接为当前会话生成二维码
+                    // 使用后端API生成二维码
                     try {
-                        const QRCode = window.QRCode || await import('https://cdn.jsdelivr.net/npm/qrcode@1.5.3/+esm');
-                        const qrCodeDataUrl = await QRCode.toDataURL(audienceUrl);
-                        document.getElementById('qrCode').src = qrCodeDataUrl;
-                    } catch (error) {
-                        console.log('QR Code generation failed, using fallback');
-                        // 如果前端生成失败，使用后端API
                         const qrResponse = await fetch(`/api/sessions/${sessionId}/qr`);
                         if (qrResponse.ok) {
                             const qrData = await qrResponse.json();
                             document.getElementById('qrCode').src = qrData.qrCode;
+                        } else {
+                            console.error('Failed to generate QR code');
                         }
+                    } catch (error) {
+                        console.error('Error generating QR code:', error);
                     }
                     
                     // 加载现有问题
@@ -386,6 +384,6 @@
         // 定期刷新问题列表
         setInterval(loadQuestions, 30000); // 每30秒刷新一次
     </script>
-    <script src="hana-effects.js"></script>
+    <script src="/hana-effects.js"></script>
 </body>
 </html>
