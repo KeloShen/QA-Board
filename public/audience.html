@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A - 提问页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .session-id {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .question-form {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .questions-list {
+            border-top: 2px solid #f0f0f0;
+            padding-top: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .question-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question-text {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .question-author {
+            font-weight: 600;
+        }
+        
+        .vote-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .vote-btn:hover {
+            background: #218838;
+        }
+        
+        .vote-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .no-questions {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="sessionTitle">Loading...</h1>
+            <div class="session-id">会话ID: <span id="sessionId"></span></div>
+        </div>
+        
+        <div class="content">
+            <div class="success-message" id="successMessage">
+                ✅ 问题提交成功！
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                ❌ 提交失败，请重试
+            </div>
+            
+            <form class="question-form" id="questionForm">
+                <div class="form-group">
+                    <label for="authorName">您的姓名（可选）</label>
+                    <input type="text" id="authorName" placeholder="匿名" maxlength="50">
+                </div>
+                
+                <div class="form-group">
+                    <label for="questionText">您的问题 *</label>
+                    <textarea id="questionText" placeholder="请输入您想问的问题..." required maxlength="500"></textarea>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">
+                    📝 提交问题
+                </button>
+            </form>
+            
+            <div class="questions-list">
+                <div class="section-title">
+                    💬 其他问题
+                </div>
+                <div id="questionsList">
+                    <div class="no-questions">
+                        暂无其他问题
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const sessionId = window.location.pathname.split('/').pop();
+        console.log('👥 Audience session ID:', sessionId);
+        
+        const socket = io({
+            transports: ['websocket', 'polling']
+        });
+        
+        // 连接状态监听
+        socket.on('connect', () => {
+            console.log('✅ Socket connected:', socket.id);
+            socket.emit('joinAudience', sessionId);
+            
+            // 发送测试ping
+            socket.emit('ping', { role: 'audience', sessionId });
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('❌ Socket disconnected');
+        });
+        
+        socket.on('joinedRoom', (data) => {
+            console.log('🏠 Joined room:', data);
+        });
+        
+        // 监听新问题
+        socket.on('newQuestion', (question) => {
+            console.log('📝 New question received:', question);
+            addQuestionToList(question);
+        });
+        
+        // 监听问题更新
+        socket.on('questionUpdated', (question) => {
+            console.log('🔄 Question updated:', question);
+            updateQuestionInList(question);
+        });
+        
+        // 测试连接
+        socket.on('pong', (data) => {
+            console.log('🏓 Pong received:', data);
+        });
+        
+        // 页面加载时获取会话信息
+        async function loadSession() {
+            try {
+                const response = await fetch(`/api/sessions/${sessionId}`);
+                const session = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('sessionTitle').textContent = session.title;
+                    document.getElementById('sessionId').textContent = session.id;
+                    
+                    // 加载现有问题
+                    loadQuestions();
+                } else {
+                    showError('会话不存在或已结束');
+                }
+            } catch (error) {
+                console.error('Error loading session:', error);
+                showError('加载会话失败');
+            }
+        }
+        
+        // 加载问题列表
+        async function loadQuestions() {
+            try {
+                const response = await fetch(`/api/sessions/${sessionId}`);
+                const session = await response.json();
+                
+                if (response.ok) {
+                    const questionsList = document.getElementById('questionsList');
+                    
+                    if (session.questions.length === 0) {
+                        questionsList.innerHTML = '<div class="no-questions">暂无其他问题</div>';
+                    } else {
+                        questionsList.innerHTML = '';
+                        session.questions
+                            .sort((a, b) => b.votes - a.votes || new Date(b.timestamp) - new Date(a.timestamp))
+                            .forEach(question => {
+                                addQuestionToList(question);
+                            });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading questions:', error);
+            }
+        }
+        
+        // 提交问题
+        document.getElementById('questionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const authorName = document.getElementById('authorName').value.trim() || 'Anonymous';
+            const questionText = document.getElementById('questionText').value.trim();
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!questionText) {
+                showError('请输入问题内容');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...';
+            
+            try {
+                const response = await fetch(`/api/sessions/${sessionId}/questions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question: questionText,
+                        author: authorName
+                    })
+                });
+                
+                if (response.ok) {
+                    showSuccess('问题提交成功！');
+                    document.getElementById('questionText').value = '';
+                    loadQuestions(); // 刷新问题列表
+                } else {
+                    const error = await response.json();
+                    showError('提交失败: ' + error.error);
+                }
+            } catch (error) {
+                console.error('Error submitting question:', error);
+                showError('网络错误，请重试');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📝 提交问题';
+            }
+        });
+        
+        // 投票功能
+        async function voteQuestion(questionId, button) {
+            button.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/sessions/${sessionId}/questions/${questionId}/vote`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    const question = await response.json();
+                    updateQuestionInList(question);
+                } else {
+                    showError('投票失败');
+                }
+            } catch (error) {
+                console.error('Error voting:', error);
+                showError('网络错误');
+            } finally {
+                // 保持按钮禁用状态，防止重复投票
+                button.textContent = '已投票';
+            }
+        }
+        
+        // 添加问题到列表
+        function addQuestionToList(question) {
+            const questionsList = document.getElementById('questionsList');
+            
+            // 移除"暂无问题"消息
+            const noQuestions = questionsList.querySelector('.no-questions');
+            if (noQuestions) {
+                noQuestions.remove();
+            }
+            
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question-item';
+            questionElement.id = `question-${question.id}`;
+            questionElement.innerHTML = `
+                <div class="question-text">${question.text}</div>
+                <div class="question-meta">
+                    <span class="question-author">👤 ${question.author}</span>
+                    <button class="vote-btn" onclick="voteQuestion('${question.id}', this)">
+                        👍 ${question.votes}
+                    </button>
+                </div>
+            `;
+            
+            questionsList.appendChild(questionElement);
+        }
+        
+        // 更新问题
+        function updateQuestionInList(question) {
+            const questionElement = document.getElementById(`question-${question.id}`);
+            if (questionElement) {
+                const voteBtn = questionElement.querySelector('.vote-btn');
+                voteBtn.innerHTML = `👍 ${question.votes}`;
+            }
+        }
+        
+        // 显示成功消息
+        function showSuccess(message) {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.textContent = message;
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 显示错误消息
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', loadSession);
+        
+        // 定期刷新问题列表
+        setInterval(loadQuestions, 15000); // 每15秒刷新一次
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Session - 演讲者控制台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .session-info h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .session-id {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            text-align: right;
+        }
+        
+        .stat-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .questions-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .qr-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            height: fit-content;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 1rem auto;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+        }
+        
+        .audience-url {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            word-break: break-all;
+        }
+        
+        .question-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .question-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .question-text {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .question-author {
+            font-weight: 600;
+        }
+        
+        .question-votes {
+            background: #667eea;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+        }
+        
+        .no-questions {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        .refresh-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="session-info">
+            <h1 id="sessionTitle">Loading...</h1>
+            <div class="session-id">会话ID: <span id="sessionId"></span></div>
+        </div>
+        <div class="stats">
+            <div class="stat-item">📊 问题数量: <span id="questionCount">0</span></div>
+            <div class="stat-item">👥 在线人数: <span id="onlineCount">0</span></div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="questions-section">
+            <div class="section-title">
+                💬 实时问题
+                <button class="refresh-btn" onclick="loadQuestions()">刷新</button>
+            </div>
+            <div id="questionsList">
+                <div class="no-questions">
+                    等待观众提问...
+                </div>
+            </div>
+        </div>
+        
+        <div class="qr-section">
+            <div class="section-title">📱 观众入口</div>
+            <img id="qrCode" class="qr-code" alt="QR Code" />
+            <div class="audience-url" id="audienceUrl"></div>
+            <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                观众扫描二维码或访问链接即可提问
+            </p>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const sessionId = window.location.pathname.split('/').pop();
+        console.log('🎤 Presenter session ID:', sessionId);
+        
+        const socket = io({
+            transports: ['websocket', 'polling']
+        });
+        
+        // 连接状态监听
+        socket.on('connect', () => {
+            console.log('✅ Socket connected:', socket.id);
+            socket.emit('joinPresenter', sessionId);
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('❌ Socket disconnected');
+        });
+        
+        socket.on('joinedRoom', (data) => {
+            console.log('🏠 Joined room:', data);
+        });
+        
+        // 监听新问题
+        socket.on('newQuestion', (question) => {
+            console.log('📝 New question received:', question);
+            addQuestionToList(question);
+            updateQuestionCount();
+        });
+        
+        // 监听问题更新
+        socket.on('questionUpdated', (question) => {
+            console.log('🔄 Question updated:', question);
+            updateQuestionInList(question);
+        });
+        
+        // 测试连接
+        socket.on('pong', (data) => {
+            console.log('🏓 Pong received:', data);
+        });
+        
+        // 页面加载时获取会话信息
+        async function loadSession() {
+            try {
+                const response = await fetch(`/api/sessions/${sessionId}`);
+                const session = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('sessionTitle').textContent = session.title;
+                    document.getElementById('sessionId').textContent = session.id;
+                    
+                    // 生成二维码和URL
+                    const audienceUrl = `${window.location.origin}/audience/${sessionId}`;
+                    document.getElementById('audienceUrl').textContent = audienceUrl;
+                    
+                    // 直接为当前会话生成二维码
+                    try {
+                        const QRCode = window.QRCode || await import('https://cdn.jsdelivr.net/npm/qrcode@1.5.3/+esm');
+                        const qrCodeDataUrl = await QRCode.toDataURL(audienceUrl);
+                        document.getElementById('qrCode').src = qrCodeDataUrl;
+                    } catch (error) {
+                        console.log('QR Code generation failed, using fallback');
+                        // 如果前端生成失败，使用后端API
+                        const qrResponse = await fetch(`/api/sessions/${sessionId}/qr`);
+                        if (qrResponse.ok) {
+                            const qrData = await qrResponse.json();
+                            document.getElementById('qrCode').src = qrData.qrCode;
+                        }
+                    }
+                    
+                    // 加载现有问题
+                    loadQuestions();
+                } else {
+                    alert('会话不存在');
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error loading session:', error);
+                alert('加载会话失败');
+            }
+        }
+        
+        // 加载问题列表
+        async function loadQuestions() {
+            try {
+                const response = await fetch(`/api/sessions/${sessionId}`);
+                const session = await response.json();
+                
+                if (response.ok) {
+                    const questionsList = document.getElementById('questionsList');
+                    
+                    if (session.questions.length === 0) {
+                        questionsList.innerHTML = '<div class="no-questions">等待观众提问...</div>';
+                    } else {
+                        questionsList.innerHTML = '';
+                        session.questions
+                            .sort((a, b) => b.votes - a.votes || new Date(b.timestamp) - new Date(a.timestamp))
+                            .forEach(question => {
+                                addQuestionToList(question);
+                            });
+                    }
+                    
+                    updateQuestionCount();
+                }
+            } catch (error) {
+                console.error('Error loading questions:', error);
+            }
+        }
+        
+        // 添加问题到列表
+        function addQuestionToList(question) {
+            const questionsList = document.getElementById('questionsList');
+            
+            // 移除"等待提问"消息
+            const noQuestions = questionsList.querySelector('.no-questions');
+            if (noQuestions) {
+                noQuestions.remove();
+            }
+            
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question-item';
+            questionElement.id = `question-${question.id}`;
+            questionElement.innerHTML = `
+                <div class="question-text">${question.text}</div>
+                <div class="question-meta">
+                    <span class="question-author">👤 ${question.author}</span>
+                    <span class="question-votes">👍 ${question.votes}</span>
+                </div>
+            `;
+            
+            questionsList.insertBefore(questionElement, questionsList.firstChild);
+        }
+        
+        // 更新问题
+        function updateQuestionInList(question) {
+            const questionElement = document.getElementById(`question-${question.id}`);
+            if (questionElement) {
+                const votesElement = questionElement.querySelector('.question-votes');
+                votesElement.textContent = `👍 ${question.votes}`;
+            }
+        }
+        
+        // 更新问题数量
+        function updateQuestionCount() {
+            const questionItems = document.querySelectorAll('.question-item');
+            document.getElementById('questionCount').textContent = questionItems.length;
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', loadSession);
+        
+        // 定期刷新问题列表
+        setInterval(loadQuestions, 30000); // 每30秒刷新一次
+    </script>
+</body>
+</html>
