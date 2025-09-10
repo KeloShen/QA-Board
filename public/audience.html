@@ -14,7 +14,7 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             padding: 1rem;
             margin: 0;
@@ -23,7 +23,7 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
-            border-radius: 25px;
+            border-radius: 12px;
             overflow: hidden;
             position: relative;
             z-index: 10;
@@ -31,7 +31,7 @@
         
         .header {
             color: white;
-            padding: 2rem;
+            padding: 1.5rem;
             text-align: center;
         }
         
@@ -46,7 +46,7 @@
         }
         
         .content {
-            padding: 2rem;
+            padding: 1.5rem;
         }
         
         .question-form {
@@ -54,7 +54,7 @@
         }
         
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
         
         label {
@@ -87,17 +87,16 @@
         }
         
         .questions-list {
-            border-top: 2px solid #f0f0f0;
-            padding-top: 2rem;
+            border-top: 1px solid var(--hana-border);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
         }
         
         .section-title {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             margin-bottom: 1rem;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            color: var(--hana-text);
+            font-weight: 600;
         }
         
         .question-item {
@@ -164,14 +163,11 @@
     </style>
 </head>
 <body class="hana-bg">
-    <!-- 花朵飘落动画 -->
+    <!-- 精简花朵装饰 -->
     <div class="flower-container">
         <div class="flower">🌸</div>
-        <div class="flower">🌺</div>
-        <div class="flower">🌻</div>
-        <div class="flower">🌷</div>
-        <div class="flower">🌹</div>
-        <div class="flower">🌼</div>
+        <div class="flower">🌸</div>
+        <div class="flower">🌸</div>
     </div>
     <div class="container hana-container">
         <div class="header hana-header">
@@ -181,36 +177,55 @@
         
         <div class="content">
             <div class="success-message hana-success" id="successMessage">
-                问题花朵成功绽放在花园中！
+                <span class="hana-bilingual">
+                    <span class="zh">问题提交成功！</span>
+                    <span class="en">Question submitted successfully!</span>
+                </span>
             </div>
             
             <div class="error-message hana-error" id="errorMessage">
-                花朵种植失败，请重试
+                <span class="hana-bilingual">
+                    <span class="zh">提交失败，请重试</span>
+                    <span class="en">Submission failed, please try again</span>
+                </span>
             </div>
             
             <form class="question-form" id="questionForm">
                 <div class="form-group">
-                    <label for="authorName">您的姓名（可选）</label>
-                    <input type="text" id="authorName" class="hana-input" placeholder="🌸 您的花名（可选）" maxlength="50">
+                    <label for="authorName" class="hana-label hana-bilingual">
+                        <span class="zh">您的姓名（可选）</span>
+                        <span class="en">Your Name (Optional)</span>
+                    </label>
+                    <input type="text" id="authorName" class="hana-input" placeholder="输入您的姓名 / Enter your name" maxlength="50">
                 </div>
                 
                 <div class="form-group">
-                    <label for="questionText">您的问题 *</label>
-                    <textarea id="questionText" class="hana-input" placeholder="🌺 在这里种下您的问题花种..." required maxlength="500" style="min-height: 120px; resize: vertical;"></textarea>
+                    <label for="questionText" class="hana-label hana-bilingual">
+                        <span class="zh">您的问题 *</span>
+                        <span class="en">Your Question *</span>
+                    </label>
+                    <textarea id="questionText" class="hana-input" placeholder="请输入您的问题 / Please enter your question" required maxlength="500" style="min-height: 120px; resize: vertical;"></textarea>
                 </div>
                 
                 <button type="submit" class="btn hana-btn" id="submitBtn">
-                    🌸 让问题绽放
+                    <span class="hana-bilingual">
+                        <span class="zh">提交问题</span>
+                        <span class="en">Submit Question</span>
+                    </span>
                 </button>
             </form>
             
             <div class="questions-list">
-                <div class="section-title">
-                    🌻 花园中的其他花朵
+                <div class="section-title hana-bilingual">
+                    <span class="zh">其他问题</span>
+                    <span class="en">Other Questions</span>
                 </div>
                 <div id="questionsList">
-                    <div class="no-questions" style="text-align: center; color: #ff69b4; font-style: italic; padding: 2rem;">
-                        🌱 花园还很宁静，等待更多花朵绽放... 🌱
+                    <div class="hana-empty-state">
+                        <div class="hana-bilingual">
+                            <span class="zh">暂无其他问题</span>
+                            <span class="en">No other questions yet</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -291,7 +306,13 @@
                     const questionsList = document.getElementById('questionsList');
                     
                     if (session.questions.length === 0) {
-                        questionsList.innerHTML = '<div class="no-questions">暂无其他问题</div>';
+                        questionsList.innerHTML = `
+                            <div class="hana-empty-state">
+                                <div class="hana-bilingual">
+                                    <span class="zh">暂无其他问题</span>
+                                    <span class="en">No other questions yet</span>
+                                </div>
+                            </div>`;
                     } else {
                         questionsList.innerHTML = '';
                         session.questions
@@ -335,14 +356,9 @@
                 });
                 
                 if (response.ok) {
-                    showSuccess('问题花朵成功绽放在花园中！');
+                    showSuccess();
                     document.getElementById('questionText').value = '';
                     loadQuestions(); // 刷新问题列表
-                    
-                    // 触发庆祝动画
-                    if (window.HanaEffects) {
-                        window.HanaEffects.celebrateNewQuestion();
-                    }
                 } else {
                     const error = await response.json();
                     showError('提交失败: ' + error.error);
@@ -376,9 +392,8 @@
                 showError('网络错误');
             } finally {
                 // 保持按钮禁用状态，防止重复投票
-                button.innerHTML = '🌸 已投票';
-                button.style.background = 'linear-gradient(135deg, #ddd 0%, #eee 100%)';
-                button.style.color = '#999';
+                button.innerHTML = 'Voted';
+                button.disabled = true;
             }
         }
         
@@ -387,30 +402,30 @@
             const questionsList = document.getElementById('questionsList');
             
             // 移除"暂无问题"消息
-            const noQuestions = questionsList.querySelector('.no-questions');
+            const noQuestions = questionsList.querySelector('.hana-empty-state');
             if (noQuestions) {
                 noQuestions.remove();
             }
             
             const questionElement = document.createElement('div');
-            questionElement.className = 'question-item hana-question hana-bloom';
+            questionElement.className = 'question-item hana-question hana-fade-in';
             questionElement.id = `question-${question.id}`;
             questionElement.innerHTML = `
-                <div class="question-text">${question.text}</div>
-                <div class="question-meta">
-                    <span class="question-author">🌸 ${question.author}</span>
+                <div class="hana-question-text">${question.text}</div>
+                <div class="hana-question-meta">
+                    <span class="hana-question-author">${question.author}</span>
                     <button class="vote-btn hana-vote-btn" onclick="voteQuestion('${question.id}', this)">
-                        💖 ${question.votes}
+                        ${question.votes} votes
                     </button>
                 </div>
             `;
             
             questionsList.appendChild(questionElement);
             
-            // 添加花朵绽放动画
+            // 移除动画类
             setTimeout(() => {
-                questionElement.classList.remove('hana-bloom');
-            }, 600);
+                questionElement.classList.remove('hana-fade-in');
+            }, 300);
         }
         
         // 更新问题
@@ -418,12 +433,12 @@
             const questionElement = document.getElementById(`question-${question.id}`);
             if (questionElement) {
                 const voteBtn = questionElement.querySelector('.vote-btn');
-                voteBtn.innerHTML = `💖 ${question.votes}`;
+                voteBtn.innerHTML = `${question.votes} votes`;
                 
                 // 添加投票动画
-                voteBtn.style.transform = 'scale(1.2)';
+                voteBtn.style.transform = 'translateY(-1px)';
                 setTimeout(() => {
-                    voteBtn.style.transform = 'scale(1)';
+                    voteBtn.style.transform = 'translateY(0)';
                 }, 200);
             }
         }
@@ -431,7 +446,6 @@
         // 显示成功消息
         function showSuccess(message) {
             const successMsg = document.getElementById('successMessage');
-            successMsg.textContent = message;
             successMsg.style.display = 'block';
             setTimeout(() => {
                 successMsg.style.display = 'none';
@@ -441,7 +455,6 @@
         // 显示错误消息
         function showError(message) {
             const errorMsg = document.getElementById('errorMessage');
-            errorMsg.textContent = message;
             errorMsg.style.display = 'block';
             setTimeout(() => {
                 errorMsg.style.display = 'none';

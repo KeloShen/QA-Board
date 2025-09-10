@@ -80,21 +80,34 @@
     </div>
     
     <div class="container hana-container">
-        <h1 class="hana-title">🌸 HANA 问答花园</h1>
-        <p style="text-align: center; color: #ff69b4; margin-bottom: 2rem; font-size: 1.1rem;">让问答如花朵般绽放 ✨</p>
+        <h1 class="hana-title hana-bilingual">
+            <span class="zh">交互问答系统</span>
+            <span class="en">Interactive Q&A Platform</span>
+        </h1>
+        <div class="description hana-subtitle hana-bilingual">
+            <span class="zh">创建互动问答会话，连接演讲者与观众</span>
+            <span class="en">Create interactive sessions to connect speakers with audiences</span>
+        </div>
         <form id="sessionForm">
             <div class="form-group">
-                <label for="sessionTitle">会话标题</label>
-                <input type="text" id="sessionTitle" class="hana-input" placeholder="🌺 输入您的演讲标题..." required>
+                <label for="sessionTitle" class="hana-label hana-bilingual">
+                </label>
+                <input type="text" id="sessionTitle" class="hana-input" placeholder="输入您的演讲标题 / Enter your presentation title" required>
             </div>
             <button type="submit" class="btn hana-btn" id="createBtn">
-                🌸 创建花朵会话
+                <span class="hana-bilingual">
+                    <span class="zh">创建会话</span>
+                    <span class="en">Create Session</span>
+                </span>
             </button>
         </form>
         
         <div class="loading" id="loading">
             <div class="hana-loading"></div>
-            <p style="color: #ff69b4; margin-top: 1rem;">🌸 正在播种花朵会话...</p>
+            <p class="hana-bilingual" style="margin-top: 0.75rem; font-size: 0.9rem;">
+                <span class="zh">正在创建会话...</span>
+                <span class="en">Creating session...</span>
+            </p>
         </div>
     </div>
 

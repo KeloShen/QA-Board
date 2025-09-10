@@ -14,14 +14,15 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             margin: 0;
+            background: var(--hana-background);
         }
         
         .header {
             color: white;
-            padding: 1rem 2rem;
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -57,8 +58,8 @@
         }
         
         .questions-section {
-            border-radius: 25px;
-            padding: 2rem;
+            border-radius: 12px;
+            padding: 1.5rem;
         }
         
         .section-title {
@@ -71,7 +72,7 @@
         }
         
         .qr-section {
-            border-radius: 25px;
+            border-radius: 12px;
             padding: 1.5rem;
             text-align: center;
             height: fit-content;
@@ -96,10 +97,10 @@
         }
         
         .question-item {
-            border-radius: 20px;
+            border-radius: 8px;
             padding: 1rem;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
         }
         
         .question-text {
@@ -123,10 +124,10 @@
         
         .question-votes {
             color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
+            padding: 0.4rem 0.75rem;
+            border-radius: 16px;
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 500;
         }
         
         .no-questions {
@@ -137,18 +138,7 @@
         }
         
         .refresh-btn {
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .refresh-btn:hover {
-            transform: scale(1.05);
+            font-size: 0.85rem;
         }
         
         @media (max-width: 768px) {
@@ -166,14 +156,11 @@
     </style>
 </head>
 <body class="hana-bg">
-    <!-- 花朵飘落动画 -->
+    <!-- 精简花朵装饰 -->
     <div class="flower-container">
         <div class="flower">🌸</div>
-        <div class="flower">🌺</div>
-        <div class="flower">🌻</div>
-        <div class="flower">🌷</div>
-        <div class="flower">🌹</div>
-        <div class="flower">🌼</div>
+        <div class="flower">🌸</div>
+        <div class="flower">🌸</div>
     </div>
     <div class="header hana-header">
         <div class="session-info">
@@ -181,30 +168,53 @@
             <div class="session-id">会话ID: <span id="sessionId"></span></div>
         </div>
         <div class="stats">
-            <div class="stat-item">🌺 问题花朗: <span id="questionCount">0</span></div>
-            <div class="stat-item">🌸 在线花友: <span id="onlineCount">0</span></div>
+            <div class="hana-stats">
+                <div class="stat-item hana-bilingual">
+                    <span class="zh">问题数量: <span id="questionCount">0</span></span>
+                    <span class="en">Questions: <span id="questionCountEn">0</span></span>
+                </div>
+                <div class="stat-item hana-bilingual">
+                    <span class="zh">在线用户: <span id="onlineCount">0</span></span>
+                    <span class="en">Online: <span id="onlineCountEn">0</span></span>
+                </div>
+            </div>
         </div>
     </div>
     
     <div class="main-content">
         <div class="questions-section hana-container">
-            <div class="section-title">
-                🌺 花朵问题花园
-                <button class="refresh-btn hana-vote-btn" onclick="loadQuestions()">🌸 刷新</button>
+            <div class="hana-section-title">
+                <span class="hana-bilingual">
+                    <span class="zh">实时问题</span>
+                    <span class="en">Live Questions</span>
+                </span>
+                <button class="refresh-btn hana-btn-secondary" onclick="loadQuestions()">
+                    <span class="hana-bilingual">
+                        <span class="zh">刷新</span>
+                        <span class="en">Refresh</span>
+                    </span>
+                </button>
             </div>
             <div id="questionsList">
-                <div class="no-questions" style="text-align: center; color: #ff69b4; font-style: italic; padding: 3rem; font-size: 1.1rem;">
-                    🌱 花园正在等待第一朵问题花朵绽放... 🌱
+                <div class="hana-empty-state">
+                    <div class="hana-bilingual">
+                        <span class="zh">等待观众提问...</span>
+                        <span class="en">Waiting for audience questions...</span>
+                    </div>
                 </div>
             </div>
         </div>
         
         <div class="qr-section hana-qr-section">
-            <div class="section-title">🌸 花友入口</div>
+            <div class="hana-section-title hana-bilingual">
+                <span class="zh">观众入口</span>
+                <span class="en">Audience Access</span>
+            </div>
             <img id="qrCode" class="qr-code" alt="QR Code" />
             <div class="audience-url" id="audienceUrl"></div>
-            <p style="margin-top: 1rem; color: white; font-size: 0.95rem; font-weight: 500;">
-                🌻 扫描二维码或访问链接，加入花朵问答花园 🌻
+            <p class="hana-bilingual" style="margin-top: 1rem; color: white; font-size: 0.9rem; font-weight: 400; opacity: 0.95;">
+                <span class="zh">观众可扫描二维码或访问链接参与问答</span>
+                <span class="en">Audience can scan QR code or visit link to join</span>
             </p>
         </div>
     </div>
@@ -301,7 +311,13 @@
                     const questionsList = document.getElementById('questionsList');
                     
                     if (session.questions.length === 0) {
-                        questionsList.innerHTML = '<div class="no-questions">等待观众提问...</div>';
+                        questionsList.innerHTML = `
+                            <div class="hana-empty-state">
+                                <div class="hana-bilingual">
+                                    <span class="zh">等待观众提问...</span>
+                                    <span class="en">Waiting for audience questions...</span>
+                                </div>
+                            </div>`;
                     } else {
                         questionsList.innerHTML = '';
                         session.questions
@@ -323,28 +339,28 @@
             const questionsList = document.getElementById('questionsList');
             
             // 移除"等待提问"消息
-            const noQuestions = questionsList.querySelector('.no-questions');
+            const noQuestions = questionsList.querySelector('.hana-empty-state');
             if (noQuestions) {
                 noQuestions.remove();
             }
             
             const questionElement = document.createElement('div');
-            questionElement.className = 'question-item hana-question hana-bloom';
+            questionElement.className = 'question-item hana-question hana-fade-in';
             questionElement.id = `question-${question.id}`;
             questionElement.innerHTML = `
-                <div class="question-text">${question.text}</div>
-                <div class="question-meta">
-                    <span class="question-author">🌸 ${question.author}</span>
-                    <span class="question-votes hana-vote-btn">👍 ${question.votes}</span>
+                <div class="hana-question-text">${question.text}</div>
+                <div class="hana-question-meta">
+                    <span class="hana-question-author">${question.author}</span>
+                    <span class="question-votes hana-vote-btn">${question.votes} votes</span>
                 </div>
             `;
             
             questionsList.insertBefore(questionElement, questionsList.firstChild);
             
-            // 添加花朵绽放动画
+            // 移除动画类
             setTimeout(() => {
-                questionElement.classList.remove('hana-bloom');
-            }, 600);
+                questionElement.classList.remove('hana-fade-in');
+            }, 300);
         }
         
         // 更新问题
@@ -359,7 +375,9 @@
         // 更新问题数量
         function updateQuestionCount() {
             const questionItems = document.querySelectorAll('.question-item');
-            document.getElementById('questionCount').textContent = questionItems.length;
+            const count = questionItems.length;
+            document.getElementById('questionCount').textContent = count;
+            document.getElementById('questionCountEn').textContent = count;
         }
         
         // 页面加载完成后初始化

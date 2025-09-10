@@ -1,6 +1,6 @@
-/* 🌸 HANA 花朵主题样式 */
+/* 🌸 HANA - Clean & Elegant Theme */
 
-/* 花朵飘落动画 */
+/* 精简花朵装饰 - 只保留3个，透明度很低 */
 .flower-container {
     position: fixed;
     top: 0;
@@ -14,333 +14,396 @@
 
 .flower {
     position: absolute;
-    font-size: 20px;
-    color: #ff69b4;
-    animation: fall linear infinite;
-    opacity: 0.7;
+    font-size: 12px;
+    color: #e8b4cb;
+    animation: gentleFall linear infinite;
+    opacity: 0.2;
 }
 
-.flower:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
-.flower:nth-child(2) { left: 20%; animation-duration: 10s; animation-delay: 1s; }
-.flower:nth-child(3) { left: 30%; animation-duration: 12s; animation-delay: 2s; }
-.flower:nth-child(4) { left: 50%; animation-duration: 9s; animation-delay: 3s; }
-.flower:nth-child(5) { left: 70%; animation-duration: 11s; animation-delay: 4s; }
-.flower:nth-child(6) { left: 85%; animation-duration: 13s; animation-delay: 5s; }
+.flower:nth-child(1) { left: 15%; animation-duration: 15s; animation-delay: 0s; }
+.flower:nth-child(2) { left: 50%; animation-duration: 18s; animation-delay: 8s; }
+.flower:nth-child(3) { left: 80%; animation-duration: 20s; animation-delay: 15s; }
 
-@keyframes fall {
+@keyframes gentleFall {
     0% {
-        transform: translateY(-100px) rotate(0deg);
-        opacity: 0.7;
+        transform: translateY(-50px);
+        opacity: 0;
     }
-    50% {
-        opacity: 1;
-    }
+    10% { opacity: 0.2; }
+    90% { opacity: 0.2; }
     100% {
-        transform: translateY(100vh) rotate(360deg);
+        transform: translateY(100vh);
         opacity: 0;
     }
 }
 
-/* HANA 花朵主题配色 */
+/* HANA 精简配色方案 */
 :root {
-    --hana-pink: #ff69b4;
-    --hana-light-pink: #ffb6c1;
-    --hana-peach: #ffcccb;
-    --hana-lavender: #e6e6fa;
-    --hana-mint: #f0fff0;
-    --hana-gold: #ffd700;
-    --hana-coral: #ff7f50;
-    --hana-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
-    --hana-gradient-alt: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    --hana-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
+    --hana-primary: #d63384;
+    --hana-primary-light: #e8b4cb;
+    --hana-background: #fefefe;
+    --hana-surface: #ffffff;
+    --hana-text: #212529;
+    --hana-text-secondary: #6c757d;
+    --hana-border: #e9ecef;
+    --hana-success: #198754;
+    --hana-error: #dc3545;
+    --hana-gradient: linear-gradient(135deg, #d63384 0%, #6f42c1 100%);
+    --hana-shadow: 0 2px 12px rgba(214, 51, 132, 0.12);
+    --hana-shadow-hover: 0 4px 20px rgba(214, 51, 132, 0.18);
 }
 
-/* 更新背景渐变 */
+/* 简洁背景 */
 .hana-bg {
-    background: var(--hana-gradient);
-    position: relative;
-}
-
-.hana-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%23ffffff" opacity="0.1"/><circle cx="80" cy="40" r="1.5" fill="%23ffffff" opacity="0.15"/><circle cx="40" cy="80" r="1" fill="%23ffffff" opacity="0.1"/></svg>');
-    pointer-events: none;
+    background: var(--hana-background);
+    min-height: 100vh;
 }
 
 /* 容器样式 */
 .hana-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 25px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: var(--hana-surface);
+    border-radius: 12px;
+    border: 1px solid var(--hana-border);
     box-shadow: var(--hana-shadow);
     position: relative;
     z-index: 10;
 }
 
-/* 标题样式 */
+/* 字体和标题 */
 .hana-title {
-    background: var(--hana-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(255, 105, 180, 0.3);
+    color: var(--hana-text);
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+}
+
+.hana-subtitle {
+    color: var(--hana-text-secondary);
+    font-size: 1rem;
+    font-weight: 400;
+    margin-top: 0.5rem;
+    line-height: 1.4;
 }
 
 /* 按钮样式 */
 .hana-btn {
     background: var(--hana-gradient);
     border: none;
-    border-radius: 50px;
+    border-radius: 8px;
     color: white;
-    font-weight: 600;
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    font-family: inherit;
     box-shadow: var(--hana-shadow);
-    position: relative;
-    overflow: hidden;
-}
-
-.hana-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s ease;
-}
-
-.hana-btn:hover::before {
-    left: 100%;
 }
 
 .hana-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(255, 105, 180, 0.4);
+    transform: translateY(-1px);
+    box-shadow: var(--hana-shadow-hover);
 }
 
 .hana-btn:active {
-    transform: translateY(-1px);
+    transform: translateY(0);
+}
+
+.hana-btn-secondary {
+    background: var(--hana-surface);
+    border: 1px solid var(--hana-border);
+    color: var(--hana-text);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.hana-btn-secondary:hover {
+    background: var(--hana-primary-light);
+    color: white;
+    border-color: var(--hana-primary-light);
 }
 
 /* 输入框样式 */
 .hana-input {
-    border: 2px solid var(--hana-light-pink);
-    border-radius: 15px;
-    padding: 1rem;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--hana-border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    background: var(--hana-surface);
+    color: var(--hana-text);
+    line-height: 1.5;
 }
 
 .hana-input:focus {
     outline: none;
-    border-color: var(--hana-pink);
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.2);
-    background: white;
+    border-color: var(--hana-primary);
+    box-shadow: 0 0 0 2px rgba(214, 51, 132, 0.1);
+}
+
+.hana-input::placeholder {
+    color: var(--hana-text-secondary);
+    font-weight: 400;
+}
+
+/* 标签样式 */
+.hana-label {
+    color: var(--hana-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
 }
 
 /* 问题卡片样式 */
 .hana-question {
-    background: linear-gradient(135deg, rgba(255, 182, 193, 0.1) 0%, rgba(230, 230, 250, 0.1) 100%);
-    border: 2px solid rgba(255, 105, 180, 0.2);
-    border-radius: 20px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    border-left: 5px solid var(--hana-pink);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.hana-question::before {
-    content: '🌸';
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.2rem;
-    opacity: 0.6;
+    background: var(--hana-surface);
+    border: 1px solid var(--hana-border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-left: 3px solid var(--hana-primary);
+    transition: all 0.2s ease;
 }
 
 .hana-question:hover {
-    transform: translateX(10px);
     box-shadow: var(--hana-shadow);
+    transform: translateY(-1px);
+}
+
+.hana-question-text {
+    color: var(--hana-text);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+}
+
+.hana-question-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--hana-text-secondary);
+}
+
+.hana-question-author {
+    font-weight: 500;
 }
 
 /* 投票按钮 */
 .hana-vote-btn {
-    background: var(--hana-gradient-alt);
+    background: var(--hana-primary-light);
     border: none;
-    border-radius: 25px;
+    border-radius: 16px;
     color: white;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-family: inherit;
 }
 
 .hana-vote-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(168, 237, 234, 0.4);
+    background: var(--hana-primary);
+    transform: translateY(-1px);
+}
+
+.hana-vote-btn:disabled {
+    background: #dee2e6;
+    color: var(--hana-text-secondary);
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* 头部样式 */
 .hana-header {
     background: var(--hana-gradient);
     color: white;
-    padding: 2rem;
-    border-radius: 0 0 30px 30px;
-    position: relative;
-    overflow: hidden;
+    padding: 1.5rem;
+    border-radius: 12px 12px 0 0;
 }
 
-.hana-header::after {
-    content: '🌺 🌸 🌻 🌷';
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    font-size: 1.5rem;
-    opacity: 0.7;
+.hana-header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.hana-header .session-id {
+    opacity: 0.9;
+    font-size: 0.85rem;
+    font-weight: 400;
+}
+
+.hana-stats {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* 区域标题 */
+.hana-section-title {
+    color: var(--hana-text);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 /* 二维码区域 */
 .hana-qr-section {
-    background: var(--hana-gradient-alt);
-    border-radius: 25px;
-    padding: 2rem;
+    background: var(--hana-surface);
+    border: 1px solid var(--hana-border);
+    border-radius: 12px;
+    padding: 1.5rem;
     text-align: center;
-    position: relative;
-    overflow: hidden;
 }
 
-.hana-qr-section::before {
-    content: '🌸';
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 1.5rem;
-    opacity: 0.6;
+.hana-qr-code {
+    border-radius: 8px;
+    border: 1px solid var(--hana-border);
+    box-shadow: var(--hana-shadow);
 }
 
-.hana-qr-section::after {
-    content: '🌺';
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    font-size: 1.5rem;
-    opacity: 0.6;
+.hana-audience-url {
+    background: #f8f9fa;
+    border: 1px solid var(--hana-border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    font-size: 0.8rem;
+    color: var(--hana-text-secondary);
+    word-break: break-all;
+    margin-top: 1rem;
+}
+
+/* 消息提示 */
+.hana-success {
+    background: #d1f2eb;
+    border: 1px solid var(--hana-success);
+    color: #0f5132;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.hana-success::before {
+    content: '✓ ';
+    font-weight: 600;
+}
+
+.hana-error {
+    background: #f8d7da;
+    border: 1px solid var(--hana-error);
+    color: #721c24;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.hana-error::before {
+    content: '✗ ';
+    font-weight: 600;
+}
+
+/* 空状态 */
+.hana-empty-state {
+    text-align: center;
+    color: var(--hana-text-secondary);
+    padding: 2.5rem 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
 /* 加载动画 */
 .hana-loading {
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255, 105, 180, 0.3);
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--hana-border);
     border-radius: 50%;
-    border-top-color: var(--hana-pink);
-    animation: spin 1s ease-in-out infinite;
+    border-top-color: var(--hana-primary);
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
 
-/* 消息提示 */
-.hana-success {
-    background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
-    border: 2px solid #32CD32;
-    color: #006400;
-    border-radius: 15px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    position: relative;
+/* 简单动画效果 */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.hana-success::before {
-    content: '🌻';
-    margin-right: 0.5rem;
+.hana-fade-in {
+    animation: fadeInUp 0.3s ease-out;
 }
 
-.hana-error {
-    background: linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 100%);
-    border: 2px solid #FF69B4;
-    color: #DC143C;
-    border-radius: 15px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    position: relative;
+/* 双语言支持 */
+.hana-bilingual {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
-.hana-error::before {
-    content: '🥀';
-    margin-right: 0.5rem;
+.hana-bilingual .en {
+    font-size: 0.85em;
+    color: var(--hana-text-secondary);
+    font-weight: 400;
+}
+
+.hana-bilingual .zh {
+    font-weight: 500;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
     .flower {
-        font-size: 16px;
+        display: none; /* 移动端隐藏花朵 */
     }
     
-    .hana-header::after {
-        font-size: 1.2rem;
+    .hana-container {
+        margin: 0.5rem;
     }
-}
-
-/* 特殊动画效果 */
-@keyframes bloom {
-    0% {
-        transform: scale(0.8) rotate(-10deg);
-        opacity: 0.7;
+    
+    .hana-header {
+        padding: 1.25rem;
     }
-    50% {
-        transform: scale(1.1) rotate(5deg);
-        opacity: 1;
+    
+    .hana-header h1 {
+        font-size: 1.25rem;
     }
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
+    
+    .hana-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
     }
-}
-
-.hana-bloom {
-    animation: bloom 0.6s ease-out;
-}
-
-/* 悬浮花朵效果 */
-.floating-flowers {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.floating-flower {
-    position: absolute;
-    font-size: 24px;
-    animation: float 6s ease-in-out infinite;
-    opacity: 0.4;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0px) rotate(0deg);
+    
+    .main-content {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 1rem !important;
     }
-    50% {
-        transform: translateY(-20px) rotate(180deg);
+    
+    .hana-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.85rem;
     }
 }
