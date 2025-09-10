@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Q&A System - 演讲者</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>">
+    <title>HANA - 花朵般的问答体验 🌸</title>
+    <link rel="stylesheet" href="hana-theme.css">
     <style>
         * {
             margin: 0;
@@ -13,27 +15,24 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0;
+            padding: 20px;
         }
         
         .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             max-width: 500px;
             width: 90%;
+            padding: 2rem;
         }
         
         h1 {
             text-align: center;
-            color: #333;
             margin-bottom: 2rem;
-            font-size: 2rem;
+            font-size: 2.5rem;
         }
         
         .form-group {
@@ -49,33 +48,11 @@
         
         input[type="text"] {
             width: 100%;
-            padding: 1rem;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
             font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #667eea;
         }
         
         .btn {
             width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
         }
         
         .btn:disabled {
@@ -89,39 +66,35 @@
             text-align: center;
             margin-top: 1rem;
         }
-        
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🎤 创建 Q&A 会话</h1>
+<body class="hana-bg">
+    <!-- 花朵飘落动画 -->
+    <div class="flower-container">
+        <div class="flower">🌸</div>
+        <div class="flower">🌺</div>
+        <div class="flower">🌻</div>
+        <div class="flower">🌷</div>
+        <div class="flower">🌹</div>
+        <div class="flower">🌼</div>
+    </div>
+    
+    <div class="container hana-container">
+        <h1 class="hana-title">🌸 HANA 问答花园</h1>
+        <p style="text-align: center; color: #ff69b4; margin-bottom: 2rem; font-size: 1.1rem;">让问答如花朵般绽放 ✨</p>
         <form id="sessionForm">
             <div class="form-group">
                 <label for="sessionTitle">会话标题</label>
-                <input type="text" id="sessionTitle" placeholder="输入您的演讲标题..." required>
+                <input type="text" id="sessionTitle" class="hana-input" placeholder="🌺 输入您的演讲标题..." required>
             </div>
-            <button type="submit" class="btn" id="createBtn">
-                创建会话
+            <button type="submit" class="btn hana-btn" id="createBtn">
+                🌸 创建花朵会话
             </button>
         </form>
         
         <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>正在创建会话...</p>
+            <div class="hana-loading"></div>
+            <p style="color: #ff69b4; margin-top: 1rem;">🌸 正在播种花朵会话...</p>
         </div>
     </div>
 
@@ -162,5 +135,6 @@
             }
         });
     </script>
+    <script src="hana-effects.js"></script>
 </body>
 </html>

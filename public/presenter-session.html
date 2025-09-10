@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Q&A Session - 演讲者控制台</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>">
+    <title>HANA 花园 - 演讲者控制台 🌸</title>
+    <link rel="stylesheet" href="hana-theme.css">
     <style>
         * {
             margin: 0;
@@ -13,12 +15,11 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
             min-height: 100vh;
+            margin: 0;
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
             display: flex;
@@ -51,13 +52,13 @@
             padding: 2rem;
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 10;
         }
         
         .questions-section {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            padding: 2rem;
         }
         
         .section-title {
@@ -70,10 +71,8 @@
         }
         
         .qr-section {
-            background: white;
-            border-radius: 15px;
+            border-radius: 25px;
             padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             text-align: center;
             height: fit-content;
         }
@@ -97,16 +96,10 @@
         }
         
         .question-item {
-            background: #f8f9fa;
-            border-radius: 10px;
+            border-radius: 20px;
             padding: 1rem;
             margin-bottom: 1rem;
-            border-left: 4px solid #667eea;
-            transition: transform 0.2s;
-        }
-        
-        .question-item:hover {
-            transform: translateX(5px);
+            transition: transform 0.3s ease;
         }
         
         .question-text {
@@ -129,11 +122,11 @@
         }
         
         .question-votes {
-            background: #667eea;
             color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 15px;
-            font-size: 0.7rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
         
         .no-questions {
@@ -144,13 +137,18 @@
         }
         
         .refresh-btn {
-            background: #28a745;
             color: white;
             border: none;
             padding: 0.5rem 1rem;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            transform: scale(1.05);
         }
         
         @media (max-width: 768px) {
@@ -167,37 +165,46 @@
         }
     </style>
 </head>
-<body>
-    <div class="header">
+<body class="hana-bg">
+    <!-- 花朵飘落动画 -->
+    <div class="flower-container">
+        <div class="flower">🌸</div>
+        <div class="flower">🌺</div>
+        <div class="flower">🌻</div>
+        <div class="flower">🌷</div>
+        <div class="flower">🌹</div>
+        <div class="flower">🌼</div>
+    </div>
+    <div class="header hana-header">
         <div class="session-info">
             <h1 id="sessionTitle">Loading...</h1>
             <div class="session-id">会话ID: <span id="sessionId"></span></div>
         </div>
         <div class="stats">
-            <div class="stat-item">📊 问题数量: <span id="questionCount">0</span></div>
-            <div class="stat-item">👥 在线人数: <span id="onlineCount">0</span></div>
+            <div class="stat-item">🌺 问题花朗: <span id="questionCount">0</span></div>
+            <div class="stat-item">🌸 在线花友: <span id="onlineCount">0</span></div>
         </div>
     </div>
     
     <div class="main-content">
-        <div class="questions-section">
+        <div class="questions-section hana-container">
             <div class="section-title">
-                💬 实时问题
-                <button class="refresh-btn" onclick="loadQuestions()">刷新</button>
+                🌺 花朵问题花园
+                <button class="refresh-btn hana-vote-btn" onclick="loadQuestions()">🌸 刷新</button>
             </div>
             <div id="questionsList">
-                <div class="no-questions">
-                    等待观众提问...
+                <div class="no-questions" style="text-align: center; color: #ff69b4; font-style: italic; padding: 3rem; font-size: 1.1rem;">
+                    🌱 花园正在等待第一朵问题花朵绽放... 🌱
                 </div>
             </div>
         </div>
         
-        <div class="qr-section">
-            <div class="section-title">📱 观众入口</div>
+        <div class="qr-section hana-qr-section">
+            <div class="section-title">🌸 花友入口</div>
             <img id="qrCode" class="qr-code" alt="QR Code" />
             <div class="audience-url" id="audienceUrl"></div>
-            <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
-                观众扫描二维码或访问链接即可提问
+            <p style="margin-top: 1rem; color: white; font-size: 0.95rem; font-weight: 500;">
+                🌻 扫描二维码或访问链接，加入花朵问答花园 🌻
             </p>
         </div>
     </div>
@@ -322,17 +329,22 @@
             }
             
             const questionElement = document.createElement('div');
-            questionElement.className = 'question-item';
+            questionElement.className = 'question-item hana-question hana-bloom';
             questionElement.id = `question-${question.id}`;
             questionElement.innerHTML = `
                 <div class="question-text">${question.text}</div>
                 <div class="question-meta">
-                    <span class="question-author">👤 ${question.author}</span>
-                    <span class="question-votes">👍 ${question.votes}</span>
+                    <span class="question-author">🌸 ${question.author}</span>
+                    <span class="question-votes hana-vote-btn">👍 ${question.votes}</span>
                 </div>
             `;
             
             questionsList.insertBefore(questionElement, questionsList.firstChild);
+            
+            // 添加花朵绽放动画
+            setTimeout(() => {
+                questionElement.classList.remove('hana-bloom');
+            }, 600);
         }
         
         // 更新问题
@@ -356,5 +368,6 @@
         // 定期刷新问题列表
         setInterval(loadQuestions, 30000); // 每30秒刷新一次
     </script>
+    <script src="hana-effects.js"></script>
 </body>
 </html>
